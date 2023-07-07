@@ -1,7 +1,9 @@
 package net.jeff.diamondcarrot;
 
 import com.mojang.logging.LogUtils;
+import net.jeff.diamondcarrot.item.ModItems;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -27,6 +29,9 @@ public class DiamondCarrot
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        // Make sure that the deferred register which actually holds our items is properly registered
+        ModItems.register(modEventBus);
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
@@ -43,10 +48,12 @@ public class DiamondCarrot
         LOGGER.info("Hello world from commonSetup()");
     }
 
-    // Add the example block item to the building blocks tab
+    // Add the diamond carrot item to the food and drinks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-        // Stub
+        if(event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
+            event.accept(ModItems.DIAMOND_CARROT);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
